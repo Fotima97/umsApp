@@ -30,10 +30,7 @@ class _ChatPageState extends State<ChatPage> {
   var jsonFile;
   var fileExists;
   List<ChatModel> models = new List<ChatModel>();
-  Future<bool> _onWillPop() {
-    activeMenu = home;
-    Navigator.of(context).pop(true);
-  }
+
 
   List<ChatModel> parsePacks(String responseBody) {
     models = [];
@@ -113,120 +110,117 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-        onWillPop: _onWillPop,
-        child: new Scaffold(
-            appBar: new AppBar(
-              actions: <Widget>[
-                MaterialButton(
-                    minWidth: 20.0,
-                    child: Icon(
-                      Icons.show_chart,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {})
-              ],
-              title: new Text(widget.title),
-            ),
-            drawer: DrawerContainer(),
-            body: FutureBuilder<List<ChatModel>>(
-              future: fetchChatpacks(),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    itemCount: 2,
-                    itemBuilder: (context, index) {
-                      var item = snapshot.data[index];
-                      var itemList = snapshot.data[index].items;
-                      return Container(
-                        padding: EdgeInsets.all(5.0),
-                        child: Column(
-                          children: <Widget>[
-                            MaterialButton(
-                              padding: EdgeInsets.only(
-                                  top: 10.0,
-                                  bottom: 0.0,
-                                  left: 15.0,
-                                  right: 15.0),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      item.title,
-                                      style: TextStyle(color: Colors.grey),
-                                    ),
-                                    Icon(Icons.help, color: Colors.grey[300]),
-                                  ]),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => InternetHelpPage(
-                                              content: 'Help',
-                                            )));
-                              },
-                            ),
-                            ListView.builder(
-                              primary: false,
-                              padding: EdgeInsets.only(top: 0.0),
-                              shrinkWrap: true,
-                              itemCount: itemList.length,
-                              itemBuilder: (context, index) {
-                                var pack = itemList[index];
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      ListTile(
-                                        onTap: () {
-                                          showDialogBox2(
-                                            context,
-                                            pack.title,
-                                            pack.ussd,
-                                            languageType1 == uzbek
-                                                ? 'Xizmatni yoqishni istaysizmi?'
-                                                : 'Вы хотите активировать эту услугу?',
-                                            languageType1 == uzbek
-                                                ? 'Yoqish'
-                                                : 'Активировать',
-                                          );
-                                        },
-                                        title: Text(pack.title),
-                                        trailing: Container(
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 15.0),
-                                          decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          child: Text(
-                                            pack.price,
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ),
-                                      ),
-                                      Divider(
-                                        height: 1.0,
-                                      )
-                                    ],
-                                  ),
-                                );
-                              },
-                            )
-                          ],
+    return new Scaffold(
+        appBar: new AppBar(
+          actions: <Widget>[
+            MaterialButton(
+                minWidth: 20.0,
+                child: Icon(
+                  Icons.show_chart,
+                  color: Colors.white,
+                ),
+                onPressed: () {})
+          ],
+          title: new Text(widget.title),
+        ),
+        body: FutureBuilder<List<ChatModel>>(
+          future: fetchChatpacks(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: 2,
+                itemBuilder: (context, index) {
+                  var item = snapshot.data[index];
+                  var itemList = snapshot.data[index].items;
+                  return Container(
+                    padding: EdgeInsets.all(5.0),
+                    child: Column(
+                      children: <Widget>[
+                        MaterialButton(
+                          padding: EdgeInsets.only(
+                              top: 10.0,
+                              bottom: 0.0,
+                              left: 15.0,
+                              right: 15.0),
+                          child: Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  item.title,
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                                Icon(Icons.help, color: Colors.grey[300]),
+                              ]),
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => InternetHelpPage(
+                                          content: 'Help',
+                                        )));
+                          },
                         ),
-                      );
-                    },
+                        ListView.builder(
+                          primary: false,
+                          padding: EdgeInsets.only(top: 0.0),
+                          shrinkWrap: true,
+                          itemCount: itemList.length,
+                          itemBuilder: (context, index) {
+                            var pack = itemList[index];
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: <Widget>[
+                                  ListTile(
+                                    onTap: () {
+                                      showDialogBox2(
+                                        context,
+                                        pack.title,
+                                        pack.ussd,
+                                        languageType1 == uzbek
+                                            ? 'Xizmatni yoqishni istaysizmi?'
+                                            : 'Вы хотите активировать эту услугу?',
+                                        languageType1 == uzbek
+                                            ? 'Yoqish'
+                                            : 'Активировать',
+                                      );
+                                    },
+                                    title: Text(pack.title),
+                                    trailing: Container(
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: 8.0, horizontal: 15.0),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      child: Text(
+                                        pack.price,
+                                        style:
+                                            TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  Divider(
+                                    height: 1.0,
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        )
+                      ],
+                    ),
                   );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            )));
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ));
   }
 }

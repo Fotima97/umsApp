@@ -18,3 +18,4 @@ final apply = 'apply';
 final use = 'use';
 final activate = 'activate';
 final gets = 'get';
+const channel = 'com.project.ums/call';

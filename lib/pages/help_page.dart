@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:ums/helpers/app_constants.dart';
 import 'package:ums/helpers/drawer.dart';
 import 'package:ums/pages/home_page.dart';
@@ -15,111 +16,118 @@ class HelpPage extends StatefulWidget {
 }
 
 class _HelpPageState extends State<HelpPage> {
-  Future<bool> _onWillPop() {
-    activeMenu = home;
-    Navigator.of(context).pop(true);
+  static const platform = const MethodChannel(channel);
+
+  Future _call(String number) async {
+    print('calling' + number);
+    try {
+      await platform.invokeMethod('callNumber', number);
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: new Scaffold(
-          appBar: new AppBar(
-            title: new Text(widget.title),
-          ),
-          drawer: DrawerContainer(),
-          body: ListView(
-            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-            children: <Widget>[
-              ListTile(
+    return new Scaffold(
+        appBar: new AppBar(
+          title: new Text(widget.title),
+        ),
+        body: ListView(
+          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+          children: <Widget>[
+            ListTile(
+              title: Text(
+                languageType1 == uzbek
+                    ? 'Hisobni tekshirish'
+                    : 'Проверка баланса',
+              ),
+              onTap: () {
+                // launch('tel:*100%23');
+                _call('*100%23');
+              },
+            ),
+            Divider(
+              height: 2.0,
+            ),
+            ListTile(
                 title: Text(
                   languageType1 == uzbek
-                      ? 'Hisobni tekshirish'
-                      : 'Проверка баланса',
+                      ? 'Oxirgi to`lov'
+                      : 'Последняя оплата баланса',
+                ),
+                onTap: () {}),
+            Divider(
+              height: 2.0,
+            ),
+            ListTile(
+                title: Text(
+                  languageType1 == uzbek
+                      ? 'Mening xarajatlarim'
+                      : 'Мои расходы',
                 ),
                 onTap: () {
-                  launch('tel:*100%23');
-                },
-              ),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
-                  title: Text(
-                    languageType1 == uzbek
-                        ? 'Oxirgi to`lov'
-                        : 'Последняя оплата баланса',
-                  ),
-                  onTap: () {}),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
-                  title: Text(
-                    languageType1 == uzbek
-                        ? 'Mening xarajatlarim'
-                        : 'Мои расходы',
-                  ),
-                  onTap: () {}),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
-                  title: Text(
-                    languageType1 == uzbek
-                        ? 'Reklamalarni taqiqlash'
-                        : 'Запрет рассылок',
-                  ),
-                  onTap: () {}),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
-                  title: Text(
-                    languageType1 == uzbek
-                        ? 'Yoqilgan xizmatlar'
-                        : 'Подключенные услуги',
-                  ),
-                  onTap: () {}),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
-                  title: Text(
-                    languageType1 == uzbek ? 'Mening raqamim' : 'Мой номер',
-                  ),
-                  onTap: () {
-                    launch('tel:*150%23');
-                  }),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
-                  title: Text(
-                    languageType1 == uzbek
-                        ? 'Mening barcha raqamlarim'
-                        : 'Все мои номера',
-                  ),
-                  onTap: () {}),
-              Divider(
-                height: 2.0,
-              ),
-              ListTile(
+                  _call('*111*025%23');
+                }),
+            Divider(
+              height: 2.0,
+            ),
+            ListTile(
                 title: Text(
                   languageType1 == uzbek
-                      ? 'Yordam berish xizmati'
-                      : 'Службы поддержки',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                      ? 'Reklamalarni taqiqlash'
+                      : 'Запрет рассылок',
                 ),
-                onTap: () {},
-                trailing: Icon(Icons.call),
+                onTap: () {}),
+            Divider(
+              height: 2.0,
+            ),
+            ListTile(
+                title: Text(
+                  languageType1 == uzbek
+                      ? 'Yoqilgan xizmatlar'
+                      : 'Подключенные услуги',
+                ),
+                onTap: () {
+                  _call('140%23');
+                }),
+            Divider(
+              height: 2.0,
+            ),
+            ListTile(
+                title: Text(
+                  languageType1 == uzbek ? 'Mening raqamim' : 'Мой номер',
+                ),
+                onTap: () {
+                  _call('*150%23');
+                }),
+            Divider(
+              height: 2.0,
+            ),
+            ListTile(
+                title: Text(
+                  languageType1 == uzbek
+                      ? 'Mening barcha raqamlarim'
+                      : 'Все мои номера',
+                ),
+                onTap: () {}),
+            Divider(
+              height: 2.0,
+            ),
+            ListTile(
+              title: Text(
+                languageType1 == uzbek
+                    ? 'Yordam berish xizmati'
+                    : 'Службы поддержки',
+                style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              Divider(
-                height: 2.0,
-              ),
-            ],
-          )),
-    );
+              onTap: () {},
+              trailing: Icon(Icons.call),
+            ),
+            Divider(
+              height: 2.0,
+            ),
+          ],
+        ));
   }
 }

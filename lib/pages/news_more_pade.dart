@@ -20,7 +20,6 @@ class _NewsMorePageState extends State<NewsMorePage> {
         appBar: new AppBar(
           title: new Text(languageType1 == uzbek ? 'Yangiliklar' : 'Новости'),
         ),
-        drawer: DrawerContainer(),
         body: Container(
           padding: EdgeInsets.all(15.0),
           child: ListView(

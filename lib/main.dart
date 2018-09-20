@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
       title: 'UMS',
       debugShowCheckedModeBanner: false,
       theme: new ThemeData(primarySwatch: Colors.red, fontFamily: 'Roboto'),
-      home: new HomePage(title: 'UMS'),
+      home: new HomePage(title: 'UMS Control'),
       routes: <String, WidgetBuilder>{
-        '/home': (BuildContext context) => HomePage(title: 'UMS'),
+        '/home': (BuildContext context) => HomePage(title: 'UMS Control'),
         '/help': (BuildContext context) =>
             HelpPage(title: languageType1 == uzbek ? 'Yordam' : 'Помощь'),
         '/internet': (BuildContext context) => InternetPage(

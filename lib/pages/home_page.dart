@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         drawer: DrawerContainer(),
         body: Container(
           padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 10.0),
-          child: Column(
+          child: ListView(
             children: <Widget>[
               Row(
                 children: <Widget>[
@@ -104,7 +104,6 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     onPressed: () {
-                      activeMenu = help;
                       Navigator.pushNamed(context, '/help');
                     },
                   ),
@@ -126,7 +125,6 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     onPressed: () {
-                      activeMenu = internet;
                       Navigator.pushNamed(context, '/internet');
                     },
                   ),
@@ -156,7 +154,6 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     onPressed: () {
-                      activeMenu = tariff;
                       Navigator.pushNamed(context, '/tariffs');
                     },
                   ),
@@ -178,7 +175,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     onPressed: () {
-                      activeMenu = services;
+              
                       Navigator.pushNamed(context, '/services');
                     },
                   ),
@@ -208,7 +205,6 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     onPressed: () {
-                      activeMenu = chats;
                       Navigator.pushNamed(context, '/chat');
                     },
                   ),
@@ -230,8 +226,7 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                     onPressed: () {
-                      activeMenu = news;
-
+                     
                       Navigator.pushNamed(context, '/news');
                     },
                   ),

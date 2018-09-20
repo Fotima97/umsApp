@@ -26,10 +26,7 @@ class _ServicesPageState extends State<ServicesPage> {
   var dir;
   var jsonFile;
   var fileExists;
-  Future<bool> _onWillPop() {
-    activeMenu = home;
-    Navigator.of(context).pop(true);
-  }
+
 
   @override
   void initState() {
@@ -119,141 +116,137 @@ class _ServicesPageState extends State<ServicesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: new Scaffold(
-          appBar: new AppBar(
-            title: new Text(widget.title),
-          ),
-          drawer: DrawerContainer(),
-          body: Container(
-              //  color: Colors.red,
-              child: FutureBuilder<List<ServicesModel>>(
-            future: fetchServices(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  shrinkWrap: true,
-                  primary: false,
-                  itemCount: snapshot.data?.length,
-                  itemBuilder: (context, index) {
-                    var service = snapshot.data[index];
-                    return Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: Card(
-                        child: Padding(
-                          padding: const EdgeInsets.all(3.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 8.0, left: 8.0, right: 8.0),
-                                child: Text(
-                                  service.title,
-                                  textAlign: TextAlign.left,
-                                  style: TextStyle(
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w600),
-                                ),
+    return new Scaffold(
+        appBar: new AppBar(
+          title: new Text(widget.title),
+        ),
+        body: Container(
+            //  color: Colors.red,
+            child: FutureBuilder<List<ServicesModel>>(
+          future: fetchServices(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                shrinkWrap: true,
+                primary: false,
+                itemCount: snapshot.data?.length,
+                itemBuilder: (context, index) {
+                  var service = snapshot.data[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(3.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 8.0, left: 8.0, right: 8.0),
+                              child: Text(
+                                service.title,
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w600),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(service.body),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: <Widget>[
-                                  service.buttons.decline == null
-                                      ? Container()
-                                      : FlatButton(
-                                          padding: EdgeInsets.all(0.0),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                    right: 5.0),
-                                                child: Icon(
-                                                  chooseIcon(service
-                                                      .buttons.decline.icon),
-                                                  color: Colors.grey,
-                                                  size: 20.0,
-                                                ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(service.body),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                service.buttons.decline.title == 'declined'
+                                    ? Container()
+                                    : FlatButton(
+                                        padding: EdgeInsets.all(0.0),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 5.0),
+                                              child: Icon(
+                                                chooseIcon(service
+                                                    .buttons.decline.icon),
+                                                color: Colors.grey,
+                                                size: 20.0,
                                               ),
-                                              Text(
-                                                service.buttons.decline.title,
-                                                style: TextStyle(
-                                                    color: Colors.grey),
-                                              )
-                                            ],
-                                          ),
-                                          onPressed: () {
-                                            showDialogBox2(
-                                              context,
-                                              service.title,
-                                              service.buttons.decline.ussd,
-                                              languageType1 == uzbek
-                                                  ? 'Xizmatni o\'chirishni istaysizmi?'
-                                                  : 'Вы хотите отключить эту услугу?',
-                                              languageType1 == uzbek
-                                                  ? 'O\'chirish'
-                                                  : 'Отключить',
-                                            );
-                                          },
+                                            ),
+                                            Text(
+                                              service.buttons.decline.title,
+                                              style: TextStyle(
+                                                  color: Colors.grey),
+                                            )
+                                          ],
                                         ),
-                                  SizedBox(
-                                    width: 15.0,
-                                  ),
-                                  FlatButton(
-                                    padding: EdgeInsets.all(0.0),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 5.0),
-                                          child: Icon(
-                                            chooseIcon(
-                                                service.buttons.accept.icon),
-                                            color: Colors.green,
-                                            size: 20.0,
-                                          ),
+                                        onPressed: () {
+                                          showDialogBox2(
+                                            context,
+                                            service.title,
+                                            service.buttons.decline.ussd,
+                                            languageType1 == uzbek
+                                                ? 'Xizmatni o\'chirishni istaysizmi?'
+                                                : 'Вы хотите отключить эту услугу?',
+                                            languageType1 == uzbek
+                                                ? 'O\'chirish'
+                                                : 'Отключить',
+                                          );
+                                        },
+                                      ),
+                                SizedBox(
+                                  width: 15.0,
+                                ),
+                                FlatButton(
+                                  padding: EdgeInsets.all(0.0),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 5.0),
+                                        child: Icon(
+                                          chooseIcon(
+                                              service.buttons.accept.icon),
+                                          color: Colors.green,
+                                          size: 20.0,
                                         ),
-                                        Text(
-                                          service.buttons.accept.title,
-                                          style: TextStyle(color: Colors.green),
-                                        )
-                                      ],
-                                    ),
-                                    onPressed: () {
-                                      showDialogBox2(
-                                        context,
-                                        service.title,
-                                        service.buttons.accept.ussd,
-                                        languageType1 == uzbek
-                                            ? 'Xizmatni yoqishni istaysizmi?'
-                                            : 'Вы хотите включить эту услугу?',
-                                        languageType1 == uzbek
-                                            ? 'Yoqish'
-                                            : 'Включить',
-                                      );
-                                    },
+                                      ),
+                                      Text(
+                                        service.buttons.accept.title,
+                                        style: TextStyle(color: Colors.green),
+                                      )
+                                    ],
                                   ),
-                                ],
-                              )
-                            ],
-                          ),
+                                  onPressed: () {
+                                    showDialogBox2(
+                                      context,
+                                      service.title,
+                                      service.buttons.accept.ussd,
+                                      languageType1 == uzbek
+                                          ? 'Xizmatni yoqishni istaysizmi?'
+                                          : 'Вы хотите включить эту услугу?',
+                                      languageType1 == uzbek
+                                          ? 'Yoqish'
+                                          : 'Включить',
+                                    );
+                                  },
+                                ),
+                              ],
+                            )
+                          ],
                         ),
                       ),
-                    );
-                  },
-                );
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          ))),
-    );
+                    ),
+                  );
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        )));
   }
 }

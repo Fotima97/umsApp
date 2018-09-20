@@ -7,7 +7,6 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ums/helpers/app_constants.dart';
-import 'package:ums/helpers/drawer.dart';
 import 'package:ums/helpers/news_model.dart';
 import 'package:ums/pages/home_page.dart';
 import 'package:ums/pages/news_more_pade.dart';
@@ -26,16 +25,12 @@ class _NewsPageState extends State<NewsPage> {
   var dir;
   var jsonFile;
   var fileExists;
-    FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
 
   void _navigateToItemDetail(Map<String, dynamic> message) {
     // Clear away dialogs
     Navigator.popUntil(context, (Route<dynamic> route) => route is PageRoute);
     Navigator.pushNamed(context, '/news');
-  }
-  Future<bool> _onWillPop() {
-    activeMenu = home;
-    Navigator.of(context).pop(true);
   }
 
   @override
@@ -47,7 +42,6 @@ class _NewsPageState extends State<NewsPage> {
         print('onMessage $message');
       },
       onResume: (Map<String, dynamic> message) {
-        activeMenu = news;
         _navigateToItemDetail(message);
         //   Navigator.pushNamed(context, '/news');
       },
@@ -57,8 +51,6 @@ class _NewsPageState extends State<NewsPage> {
     );
     _firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, badge: true, alert: true));
-    _firebaseMessaging.getToken().then((token) {
-    });
   }
 
   List<NewsModel> parseNews(String responseBody) {
@@ -127,88 +119,83 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: new Scaffold(
-          appBar: new AppBar(
-            title: new Text(widget.title),
-          ),
-          drawer: DrawerContainer(),
-          body: Container(
-              padding: EdgeInsets.all(8.0),
-              child: FutureBuilder<List<NewsModel>>(
-                  future: fetchNews(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          itemCount: snapshot.data?.length,
-                          itemBuilder: (context, index) {
-                            var news = snapshot.data[index];
-                            return FlatButton(
-                              padding: EdgeInsets.all(0.0),
-                              child: Card(
-                                margin: EdgeInsets.all(8.0),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(
-                                          news.title,
-                                          textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontSize: 16.0,
-                                              fontWeight: FontWeight.w600),
-                                        ),
+    return new Scaffold(
+        appBar: new AppBar(
+          title: new Text(widget.title),
+        ),
+        body: Container(
+            padding: EdgeInsets.all(8.0),
+            child: FutureBuilder<List<NewsModel>>(
+                future: fetchNews(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        itemCount: snapshot.data?.length,
+                        itemBuilder: (context, index) {
+                          var news = snapshot.data[index];
+                          return FlatButton(
+                            padding: EdgeInsets.all(0.0),
+                            child: Card(
+                              margin: EdgeInsets.all(8.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        news.title,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.w600),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Text(news.body),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(
-                                              children: <Widget>[
-                                                Text(
-                                                  languageType1 == uzbek
-                                                      ? 'Batafsil...'
-                                                      : 'Подробнее...',
-                                                  style: TextStyle(
-                                                      color: Colors.blue),
-                                                ),
-                                              ],
-                                            ),
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(news.body),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: <Widget>[
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            children: <Widget>[
+                                              Text(
+                                                languageType1 == uzbek
+                                                    ? 'Batafsil...'
+                                                    : 'Подробнее...',
+                                                style: TextStyle(
+                                                    color: Colors.blue),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    )
+                                  ],
                                 ),
                               ),
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => NewsMorePage(
-                                              title: news.title,
-                                              body: news.body,
-                                            )));
-                              },
-                            );
-                          });
-                    } else {
-                      return (Center(
-                        child: CircularProgressIndicator(),
-                      ));
-                    }
-                  }))),
-    );
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => NewsMorePage(
+                                            title: news.title,
+                                            body: news.body,
+                                          )));
+                            },
+                          );
+                        });
+                  } else {
+                    return (Center(
+                      child: CircularProgressIndicator(),
+                    ));
+                  }
+                })));
   }
 }

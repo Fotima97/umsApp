@@ -16,10 +16,6 @@ class LanguagePage extends StatefulWidget {
 
 class _LanguagePageState extends State<LanguagePage> {
   int radiovalue;
-  Future<bool> _onWillPop() {
-    activeMenu = home;
-    Navigator.of(context).pop(true);
-  }
 
   void radioValueChanged(int value) {
     setState(() {
@@ -63,45 +59,41 @@ class _LanguagePageState extends State<LanguagePage> {
   @override
   Widget build(BuildContext context) {
     getLanguagetype();
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: new Scaffold(
-          appBar: new AppBar(
-            title: new Text(
-                languageType1 == uzbek ? 'Tilni o`zgartirish' : 'Сменить язык'),
-          ),
-          drawer: DrawerContainer(),
-          body: Container(
-              padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
-              child: Column(
-                children: <Widget>[
-                  ListTile(
-                    title: Text('O`zbekcha'),
-                    trailing: Radio(
-                      value: 0,
-                      groupValue: radiovalue,
-                      onChanged: (int value) {
-                        radioValueChanged(value);
-                      },
-                      activeColor: Colors.red,
-                    ),
+    return new Scaffold(
+        appBar: new AppBar(
+          title: new Text(
+              languageType1 == uzbek ? 'Tilni o`zgartirish' : 'Сменить язык'),
+        ),
+        body: Container(
+            padding: EdgeInsets.symmetric(vertical: 10.0, horizontal: 10.0),
+            child: Column(
+              children: <Widget>[
+                ListTile(
+                  title: Text('O`zbekcha'),
+                  trailing: Radio(
+                    value: 0,
+                    groupValue: radiovalue,
+                    onChanged: (int value) {
+                      radioValueChanged(value);
+                    },
+                    activeColor: Colors.red,
                   ),
-                  Divider(
-                    height: 4.0,
+                ),
+                Divider(
+                  height: 4.0,
+                ),
+                ListTile(
+                  title: Text('Русский'),
+                  trailing: Radio(
+                    value: 1,
+                    groupValue: radiovalue,
+                    onChanged: (int value) {
+                      radioValueChanged(value);
+                    },
+                    activeColor: Colors.red,
                   ),
-                  ListTile(
-                    title: Text('Русский'),
-                    trailing: Radio(
-                      value: 1,
-                      groupValue: radiovalue,
-                      onChanged: (int value) {
-                        radioValueChanged(value);
-                      },
-                      activeColor: Colors.red,
-                    ),
-                  ),
-                ],
-              ))),
-    );
+                ),
+              ],
+            )));
   }
 }

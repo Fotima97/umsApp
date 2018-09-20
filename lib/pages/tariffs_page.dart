@@ -26,10 +26,6 @@ class _TariffsPageState extends State<TariffsPage> {
   var dir;
   var jsonFile;
   var fileExists;
-  Future<bool> _onWillPop() {
-    activeMenu = home;
-    Navigator.of(context).pop(true);
-  }
 
   List<TarrifModel> parsePacks(String responseBody) {
     final parsed = json.decode(responseBody);
@@ -166,159 +162,158 @@ class _TariffsPageState extends State<TariffsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: new Scaffold(
-          appBar: new AppBar(
-            title: new Text(widget.title),
-          ),
-          drawer: DrawerContainer(),
-          body: FutureBuilder<List<TarrifModel>>(
-            future: fetchTariffs(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Container(
-                    color: Colors.red,
-                    child: PageView.builder(
-                      controller: pageController,
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (context, index) {
-                        var tarrif = snapshot.data[index];
-                        var description = tarrif.description;
-                        return Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 20.0),
-                            margin: EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 20.0),
-                            decoration: BoxDecoration(
-                                boxShadow: <BoxShadow>[
-                                  BoxShadow(
-                                      blurRadius: 5.0,
-                                      color: Colors.black,
-                                      offset: Offset(0.5, 0.5))
-                                ],
-                                borderRadius: BorderRadius.circular(10.0),
-                                color: Colors.white),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 1,
-                                  child: createTextRow(tarrif.title),
-                                ),
-                                Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      padding: EdgeInsets.only(top: 5.0),
-                                      alignment: Alignment.topCenter,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Text(tarrif.price,
-                                              style: TextStyle(
-                                                  color: Colors.red,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 30.0)),
-                                          SizedBox(
-                                            width: 3.0,
-                                          ),
-                                          Text(
-                                              languageType1 == uzbek
-                                                  ? 'oyiga'
-                                                  : 'месяц',
-                                              style: TextStyle(
-                                                  fontSize: 19.0,
-                                                  color: Colors.grey[600]))
-                                        ],
-                                      ),
-                                    )),
-                                Divider(
-                                  height: 1.0,
-                                  color: Colors.grey[300],
-                                ),
-                                Expanded(
-                                    flex: 5,
-                                    child: Container(
-                                      child: ListView.builder(
-                                        itemCount: description.length,
-                                        itemBuilder: (context, index) {
-                                          Description desc = description[index];
-                                          return ListView(
-                                              shrinkWrap: true,
-                                              primary: false,
-                                              children: <Widget>[
-                                                ListTile(
-                                                  leading:
-                                                      chooseIcon(desc.icon),
-                                                  title: Text(desc.title,
-                                                      overflow:
-                                                          TextOverflow.clip,
-                                                      style: TextStyle(
-                                                          color: Colors
-                                                              .grey[600])),
-                                                  trailing: Text(
-                                                    desc.value,
-                                                    style: TextStyle(
-                                                        color:
-                                                            Colors.grey[600]),
-                                                  ),
-                                                ),
-                                                Divider(
-                                                  height: .5,
-                                                  color: Colors.grey[300],
-                                                ),
-                                              ]);
-                                        },
-                                      ),
-                                    )),
-                                Expanded(
-                                  child: Container(),
-                                  flex: 1,
-                                ),
-                                Expanded(
+    return new Scaffold(
+        appBar: new AppBar(
+          title: new Text(widget.title),
+        ),
+        body: FutureBuilder<List<TarrifModel>>(
+          future: fetchTariffs(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Container(
+                  color: Colors.red,
+                  child: PageView.builder(
+                    controller: pageController,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      var tarrif = snapshot.data[index];
+                      var description = tarrif.description;
+                      return Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.0, vertical: 20.0),
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 20.0),
+                          decoration: BoxDecoration(
+                              boxShadow: <BoxShadow>[
+                                BoxShadow(
+                                    blurRadius: 5.0,
+                                    color: Colors.black,
+                                    offset: Offset(0.5, 0.5))
+                              ],
+                              borderRadius: BorderRadius.circular(10.0),
+                              color: Colors.white),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: <Widget>[
+                              Expanded(
+                                flex: 1,
+                                child: createTextRow(tarrif.title),
+                              ),
+                              Expanded(
                                   flex: 1,
                                   child: Container(
-                                    child: MaterialButton(
-                                      color: Colors.green,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.shopping_cart,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                              languageType1 == uzbek
-                                                  ? 'Tarif rejasiga o\'tish'
-                                                  : 'Перейти на тариф',
-                                              style: TextStyle(
-                                                  color: Colors.white))
-                                        ],
-                                      ),
-                                      onPressed: () {
-                                        showDialogBox2(
-                                            context, tarrif.title, tarrif.ussd,languageType1 == uzbek
-        ? 'Siz ushbu tarif rejaga o\'tishni xohlaysizmi?'
-        : 'Вы хотите перейте на этот тарифный план?',languageType1 == uzbek
-                                                  ? 'Tarif rejasiga o\'tish'
-                                                  : 'Перейти на тариф',);
+                                    padding: EdgeInsets.only(top: 5.0),
+                                    alignment: Alignment.topCenter,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Text(tarrif.price,
+                                            style: TextStyle(
+                                                color: Colors.red,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 30.0)),
+                                        SizedBox(
+                                          width: 3.0,
+                                        ),
+                                        Text(
+                                            languageType1 == uzbek
+                                                ? 'oyiga'
+                                                : 'месяц',
+                                            style: TextStyle(
+                                                fontSize: 19.0,
+                                                color: Colors.grey[600]))
+                                      ],
+                                    ),
+                                  )),
+                              Divider(
+                                height: 1.0,
+                                color: Colors.grey[300],
+                              ),
+                              Expanded(
+                                  flex: 5,
+                                  child: Container(
+                                    child: ListView.builder(
+                                      
+                                      itemCount: description.length,
+                                      itemBuilder: (context, index) {
+                                        Description desc = description[index];
+                                        return ListView(
+                                            shrinkWrap: true,
+                                            primary: false,
+                                            children: <Widget>[
+                                              ListTile(
+                                                leading: chooseIcon(desc.icon),
+                                                title: Text(desc.title,
+                                                    overflow: TextOverflow.clip,
+                                                    style: TextStyle(
+                                                        color:
+                                                            Colors.grey[600])),
+                                                trailing: Text(
+                                                  desc.value,
+                                                  style: TextStyle(
+                                                      color: Colors.grey[600]),
+                                                ),
+                                              ),
+                                              Divider(
+                                                height: .5,
+                                                color: Colors.grey[300],
+                                              ),
+                                            ]);
                                       },
                                     ),
+                                  )),
+                              Expanded(
+                                child: Container(),
+                                flex: 1,
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: Container(
+                                  child: MaterialButton(
+                                    color: Colors.green,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.shopping_cart,
+                                          color: Colors.white,
+                                        ),
+                                        Text(
+                                            languageType1 == uzbek
+                                                ? 'Tarif rejasiga o\'tish'
+                                                : 'Перейти на тариф',
+                                            style:
+                                                TextStyle(color: Colors.white))
+                                      ],
+                                    ),
+                                    onPressed: () {
+                                      showDialogBox2(
+                                        context,
+                                        tarrif.title,
+                                        tarrif.ussd,
+                                        languageType1 == uzbek
+                                            ? 'Siz ushbu tarif rejaga o\'tishni xohlaysizmi?'
+                                            : 'Вы хотите перейте на этот тарифный план?',
+                                        languageType1 == uzbek
+                                            ? 'Tarif rejasiga o\'tish'
+                                            : 'Перейти на тариф',
+                                      );
+                                    },
                                   ),
-                                )
-                              ],
-                            ));
-                      },
-                    ));
-              } else {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
-          )),
-    );
+                                ),
+                              )
+                            ],
+                          ));
+                    },
+                  ));
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ));
   }
 }

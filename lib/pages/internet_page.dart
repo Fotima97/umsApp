@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:ums/helpers/app_constants.dart';
 import 'package:ums/helpers/dialog_box.dart';
@@ -26,6 +27,16 @@ class InternetPage extends StatefulWidget {
 class _InternetPageState extends State<InternetPage>
     with SingleTickerProviderStateMixin {
   TabController tabController;
+    static const platform = const MethodChannel(channel);
+
+  Future _call(String number) async {
+    print('calling' + number);
+    try {
+      await platform.invokeMethod('callNumber', number);
+    } catch (e) {
+      print(e);
+    }
+  }
   var dir;
   var jsonFile;
   var fileExists;
@@ -124,10 +135,7 @@ class _InternetPageState extends State<InternetPage>
 
   @override
   Widget build(BuildContext context) {
-    Future<bool> _onWillPop() {
-      activeMenu = home;
-      Navigator.of(context).pop(true);
-    }
+
 
     Widget createTabBody() {
       return FutureBuilder<List<InternetPackages>>(
@@ -246,7 +254,7 @@ class _InternetPageState extends State<InternetPage>
                         style: TextStyle(fontSize: 16.0),
                       ),
                       onTap: () {
-                        launch('tel:*102%23');
+                        _call('*102%23');
                       },
                     ),
                     ListTile(
@@ -257,7 +265,9 @@ class _InternetPageState extends State<InternetPage>
                             : 'Получить настройки интернета',
                         style: TextStyle(fontSize: 16.0),
                       ),
-                      onTap: () {},
+                      onTap: () {
+
+                      },
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.all(0.0),
@@ -267,7 +277,10 @@ class _InternetPageState extends State<InternetPage>
                             : 'Включить мобильный интернет',
                         style: TextStyle(fontSize: 16.0),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                                                _call('**111*0011%23');
+
+                      },
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.all(0.0),
@@ -277,7 +290,9 @@ class _InternetPageState extends State<InternetPage>
                             : 'Отключить мобильный интернет',
                         style: TextStyle(fontSize: 16.0),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        _call('**111*0010%23');
+                      },
                     ),
                     ListTile(
                       contentPadding: EdgeInsets.all(0.0),
@@ -304,47 +319,43 @@ class _InternetPageState extends State<InternetPage>
           });
     }
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: new Scaffold(
-          appBar: new AppBar(
-            actions: <Widget>[
-              MaterialButton(
-                minWidth: 20.0,
-                child: Icon(
-                  Icons.settings,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  createBottomSheet(context);
-                },
+    return new Scaffold(
+        appBar: new AppBar(
+          actions: <Widget>[
+            MaterialButton(
+              minWidth: 20.0,
+              child: Icon(
+                Icons.settings,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                createBottomSheet(context);
+              },
+            )
+          ],
+          title: new Text(widget.title),
+          bottom: TabBar(
+            controller: tabController,
+            tabs: <Widget>[
+              Tab(
+                text: languageType1 == uzbek ? 'Paketlar' : 'Пакеты',
+              ),
+              Tab(
+                text: languageType1 == uzbek ? 'Tungi' : 'Ночные',
+              ),
+              Tab(
+                text: languageType1 == uzbek ? 'OnNet' : 'OnNet',
               )
             ],
-            title: new Text(widget.title),
-            bottom: TabBar(
-              controller: tabController,
-              tabs: <Widget>[
-                Tab(
-                  text: languageType1 == uzbek ? 'Paketlar' : 'Пакеты',
-                ),
-                Tab(
-                  text: languageType1 == uzbek ? 'Tungi' : 'Ночные',
-                ),
-                Tab(
-                  text: languageType1 == uzbek ? 'OnNet' : 'OnNet',
-                )
-              ],
-            ),
           ),
-          drawer: DrawerContainer(),
-          body: TabBarView(
-            controller: tabController,
-            children: <Widget>[
-              createTabBody(),
-              createTabBody(),
-              createTabBody()
-            ],
-          )),
-    );
+        ),
+        body: TabBarView(
+          controller: tabController,
+          children: <Widget>[
+            createTabBody(),
+            createTabBody(),
+            createTabBody()
+          ],
+        ));
   }
 }
